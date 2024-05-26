@@ -1,4 +1,3 @@
-# File: myapp/views.py
 from django.contrib.auth.decorators import login_required
 from .models import Course, StudentRegistration
 from django.shortcuts import render, redirect
@@ -19,7 +18,6 @@ def register(request):
         password2 = request.POST.get('password2')
         email = request.POST.get('email')
         
-        # Validation checks
         if password != password2:
             messages.error(request, 'Passwords do not match')
             return render(request, 'register.html')
@@ -32,7 +30,6 @@ def register(request):
             messages.error(request, 'Email is already used')
             return render(request, 'register.html')
         
-        # User creation
         user = User.objects.create_user(username=username, password=password, email=email)
         user.save()
         auth_login(request, user)
@@ -93,7 +90,6 @@ def course_list(request):
         courses = Course.objects.all().select_related('schedule')
     return render(request, 'course_list.html', {'courses': courses})
 def registered_courses(request):
-    # Assuming your StudentRegistration model has a foreign key to User as 'user'
     registrations = StudentRegistration.objects.filter(user=request.user).select_related('course', 'course__schedule')
     
     return render(request, 'registered_courses.html', {'registrations': registrations})
